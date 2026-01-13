@@ -2,6 +2,7 @@ import * as THREE from '../libs/three137/three.module.js';
 import { RGBELoader } from '../libs/three137/RGBELoader.js';
 import { LoadingBar } from '../libs/LoadingBar.js';
 import { Plane } from './Plane.js';
+// import { Obstacles } from './Obstacles.js';
 
 class Game {
   constructor() {
@@ -32,6 +33,7 @@ class Game {
     this.scene.add(this.cameraController);
 
     const ambient = new THREE.HemisphereLight(0xffffff, 0xbbbbff, 1);
+    ambient.position.set(0.5, 1, 0.25);
     this.scene.add(ambient);
 
     this.renderer = new THREE.WebGLRenderer({ antialias: true, alpha: true });
@@ -41,36 +43,54 @@ class Game {
     container.appendChild(this.renderer.domElement);
     this.setEnvironment();
 
+    this.active = false;
     this.load();
 
-    document.addEventListener('keydown', this.keyDown.bind(this)); // reference the Game() context inside keyDown() not the window
+    window.addEventListener('resize', this.resize.bind(this));
+
+    document.addEventListener('keydown', this.keyDown.bind(this));
     document.addEventListener('keyup', this.keyUp.bind(this));
 
-    // for touchscreens
     document.addEventListener('touchstart', this.mouseDown.bind(this));
     document.addEventListener('touchend', this.mouseUp.bind(this));
-
-    // for mouse clicks
     document.addEventListener('mousedown', this.mouseDown.bind(this));
     document.addEventListener('mouseup', this.mouseUp.bind(this));
 
     this.spaceKey = false;
-    this.active = false;
 
     const btn = document.getElementById('playBtn');
     btn.addEventListener('click', this.startGame.bind(this));
-
-    window.addEventListener('resize', this.resize.bind(this));
   }
 
   startGame() {
+    const gameover = document.getElementById('gameover');
     const instructions = document.getElementById('instructions');
     const btn = document.getElementById('playBtn');
 
+    gameover.style.display = 'none';
     instructions.style.display = 'none';
     btn.style.display = 'none';
 
+    this.score = 0;
+    this.bonusScore = 0;
+    this.lives = 3;
+
+    let elm = document.getElementById('score');
+    elm.innerHTML = this.score;
+
+    elm = document.getElementById('lives');
+    elm.innerHTML = this.lives;
+
+    this.plane.reset();
+    this.obstacles.reset();
+
     this.active = true;
+  }
+
+  resize() {
+    this.camera.aspect = window.innerWidth / window.innerHeight;
+    this.camera.updateProjectionMatrix();
+    this.renderer.setSize(window.innerWidth, window.innerHeight);
   }
 
   keyDown(evt) {
@@ -97,16 +117,12 @@ class Game {
     this.spaceKey = false;
   }
 
-  resize() {
-    this.camera.aspect = window.innerWidth / window.innerHeight;
-    this.camera.updateProjectionMatrix();
-    this.renderer.setSize(window.innerWidth, window.innerHeight);
-  }
-
   setEnvironment() {
     const loader = new RGBELoader().setPath(this.assetsPath);
     const pmremGenerator = new THREE.PMREMGenerator(this.renderer);
     pmremGenerator.compileEquirectangularShader();
+
+    const self = this;
 
     loader.load(
       'hdr/venice_sunset_1k.hdr',
@@ -114,7 +130,7 @@ class Game {
         const envMap = pmremGenerator.fromEquirectangular(texture).texture;
         pmremGenerator.dispose();
 
-        this.scene.environment = envMap;
+        self.scene.environment = envMap;
       },
       undefined,
       (err) => {
@@ -124,16 +140,17 @@ class Game {
   }
 
   load() {
+    this.loadSkybox();
     this.loading = true;
     this.loadingBar.visible = true;
 
-    this.loadSkybox();
     this.plane = new Plane(this);
+    this.obstacles = new Obstacles(this);
   }
 
   loadSkybox() {
     this.scene.background = new THREE.CubeTextureLoader()
-      .setPath(`${this.assetsPath}/plane/paintedsky/`)
+      .setPath(`${this.assetsPath}plane/paintedsky/`)
       .load(
         ['px.jpg', 'nx.jpg', 'py.jpg', 'ny.jpg', 'pz.jpg', 'nz.jpg'],
         () => {
@@ -142,16 +159,45 @@ class Game {
       );
   }
 
+  gameOver() {
+    this.active = false;
+
+    const gameover = document.getElementById('gameover');
+    const btn = document.getElementById('playBtn');
+
+    gameover.style.display = 'block';
+    btn.style.display = 'block';
+  }
+
+  incScore() {
+    this.score++;
+
+    const elm = document.getElementById('score');
+
+    elm.innerHTML = this.score;
+  }
+
+  decLives() {
+    this.lives--;
+
+    const elm = document.getElementById('lives');
+
+    elm.innerHTML = this.lives;
+
+    if (this.lives == 0) this.gameOver();
+  }
+
   updateCamera() {
     this.cameraController.position.copy(this.plane.position);
     this.cameraController.position.y = 0;
+    this.cameraTarget.copy(this.plane.position);
     this.cameraTarget.z += 6;
     this.camera.lookAt(this.cameraTarget);
   }
 
   render() {
     if (this.loading) {
-      if (this.plane.ready) {
+      if (this.plane.ready && this.obstacles.ready) {
         this.loading = false;
         this.loadingBar.visible = false;
       } else {
@@ -162,6 +208,10 @@ class Game {
     const time = this.clock.getElapsedTime();
 
     this.plane.update(time);
+
+    if (this.active) {
+      this.obstacles.update(this.plane.position, dt);
+    }
 
     this.updateCamera();
 
