@@ -1,8 +1,9 @@
-import * as THREE from '../libs/three137/three.module.js';
-import { RGBELoader } from '../libs/three137/RGBELoader.js';
-import { LoadingBar } from '../libs/LoadingBar.js';
+import * as THREE from '../../libs/three137/three.module.js';
+import { RGBELoader } from '../../libs/three137/RGBELoader.js';
+import { LoadingBar } from '../../libs/LoadingBar.js';
 import { Plane } from './Plane.js';
 import { Obstacles } from './Obstacles.js';
+import { SFX } from '../../libs/SFX.js';
 
 class Game {
   constructor() {
@@ -72,6 +73,7 @@ class Game {
     btn.style.display = 'none';
 
     this.score = 0;
+    this.bonusScore = 0;
     this.lives = 3;
 
     let elm = document.getElementById('score');
@@ -84,6 +86,8 @@ class Game {
     this.obstacles.reset();
 
     this.active = true;
+
+    this.sfx.play('engine');
   }
 
   resize() {
@@ -145,6 +149,18 @@ class Game {
 
     this.plane = new Plane(this);
     this.obstacles = new Obstacles(this);
+
+    this.loadSFX();
+  }
+
+  loadSFX() {
+    this.sfx = new SFX(this.camera, this.assetsPath + 'plane/');
+
+    this.sfx.load('explosion');
+    this.sfx.load('engine', true);
+    this.sfx.load('gliss');
+    this.sfx.load('gameover');
+    this.sfx.load('bonus');
   }
 
   loadSkybox() {
@@ -168,6 +184,9 @@ class Game {
     btn.style.display = 'block';
 
     this.plane.visible = false;
+
+    this.sfx.stopAll();
+    this.sfx.play('gameover');
   }
 
   incScore() {
@@ -175,7 +194,14 @@ class Game {
 
     const elm = document.getElementById('score');
 
-    elm.innerHTML = this.score;
+    if (this.score % 3 == 0) {
+      this.bonusScore += 3;
+      this.sfx.play('bonus');
+    } else {
+      this.sfx.play('gliss');
+    }
+
+    elm.innerHTML = this.score + this.bonusScore;
   }
 
   decLives() {
@@ -186,6 +212,8 @@ class Game {
     elm.innerHTML = this.lives;
 
     if (this.lives == 0) setTimeout(this.gameOver.bind(this), 1200);
+
+    this.sfx.play('explosion');
   }
 
   updateCamera() {
