@@ -1,5 +1,6 @@
 import { Group, Vector3 } from '../libs/three137/three.module.js';
 import { GLTFLoader } from '../libs/three137/GLTFLoader.js';
+import { Explosion } from './Explosion.js';
 
 class Obstacles {
   constructor(game) {
@@ -10,6 +11,7 @@ class Obstacles {
     this.loadStar();
     this.loadBomb();
     this.tmpPos = new Vector3();
+    this.explosions = [];
   }
 
   loadStar() {
@@ -35,7 +37,7 @@ class Obstacles {
       // called when loading has errors
       (err) => {
         console.error(err);
-      }
+      },
     );
   }
 
@@ -59,7 +61,7 @@ class Obstacles {
       // called when loading has errors
       (err) => {
         console.error(err);
-      }
+      },
     );
   }
 
@@ -100,9 +102,20 @@ class Obstacles {
     this.ready = true;
   }
 
+  removeExplosion(explosion) {
+    const index = this.explosions.indexOf(explosion);
+    if (index != -1) this.explosions.indexOf(index, 1);
+  }
+
   reset() {
     this.obstacleSpawn = { pos: 20, offset: 5 };
     this.obstacles.forEach((obstacle) => this.respawnObstacle(obstacle));
+
+    let count = 0;
+    while (this.explosions.length > 0 && count < 100) {
+      this.explosions[0].onComplete();
+      count++;
+    }
   }
 
   respawnObstacle(obstacle) {
@@ -117,7 +130,7 @@ class Obstacles {
     });
   }
 
-  update(pos) {
+  update(pos, time) {
     let collisionObstacle;
 
     this.obstacles.forEach((obstacle) => {
@@ -142,12 +155,17 @@ class Obstacles {
         }
       });
     }
+
+    this.explosions.forEach((explosion) => {
+      explosion.update(time);
+    });
   }
 
   hit(obj) {
     if (obj.name == 'star') {
       this.game.incScore();
     } else {
+      this.explosions.push(new Explosion(obj, this));
       this.game.decLives();
     }
     obj.visible = false;
