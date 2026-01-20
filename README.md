@@ -2,6 +2,8 @@
 
 A small WebGL flight demo built with Three.js and vanilla JavaScript. This repository contains a lightweight, self-contained game demo showing a controllable plane, obstacles, explosion effects, and simple physics/interaction helpers.
 
+**Repository:** https://github.com/danielsarkwa/simple-flight-game
+
 ## Features
 
 - Simple flight controls (keyboard + optional on-screen touch)
@@ -25,19 +27,19 @@ A small WebGL flight demo built with Three.js and vanilla JavaScript. This repos
 
 Serve the project over a local HTTP server (recommended) and open the page in your browser.
 
-Using Python 3 built-in server:
+Run with Node.js (Express)
+
+This repository includes a small `server.js` that serves `index.html` and the static assets. From the project root:
 
 ```bash
-cd /path/to/simple-flight-game
-python3 -m http.server 8000
-# open http://localhost:8000 in your browser
+npm install
+npm start
+# open http://localhost:3000
 ```
 
-Or with `http-server` (Node):
-
+* To run on another port:
 ```bash
-npx http-server -c-1
-# open http://localhost:8080 by default
+PORT=8000 npm start
 ```
 
 You can also use the Live Server / Workspace Server extensions in editors like VS Code.

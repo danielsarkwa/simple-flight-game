@@ -1,0 +1,25 @@
+{
+  "name": "simple-flight-game",
+  "version": "1.0.0",
+  "description": "A small WebGL flight demo built with Three.js and vanilla JavaScript. This repository contains a lightweight, self-contained game demo showing a controllable plane, obstacles, explosion effects, and simple physics/interaction helpers.",
+  "main": "Explosion.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "start": "node server.js"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/danielsarkwa/simple-flight-game.git"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "type": "commonjs",
+  "bugs": {
+    "url": "https://github.com/danielsarkwa/simple-flight-game/issues"
+  },
+  "homepage": "https://github.com/danielsarkwa/simple-flight-game#readme",
+  "dependencies": {
+    "express": "^5.2.1"
+  }
+}
