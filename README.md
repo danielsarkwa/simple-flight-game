@@ -9,6 +9,12 @@ A small WebGL flight demo built with Three.js and vanilla JavaScript. This repos
 - Uses included `three.*` libraries (multiple versions in `libs/`)
 - Lightweight, zero-build static site (open `index.html` in a browser/server)
 
+ ![Screenshot 2026-01-20 at 12 03 22 PM](https://github.com/user-attachments/assets/0b163c13-0a38-4bc0-aa28-62cc658b7641)
+
+<img width="2560" height="1440" alt="Screenshot 2026-01-20 at 12 03 51 PM" src="https://github.com/user-attachments/assets/aacc268a-097e-4542-9835-addd2f5fbfb1" />
+
+<img width="2560" height="1440" alt="Screenshot 2026-01-20 at 12 04 13 PM" src="https://github.com/user-attachments/assets/0ca5d481-3517-411f-a068-74b30f99f063" />
+
 ## Quick Start
 
 Serve the project over a local HTTP server (recommended) and open the page in your browser.
