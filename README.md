@@ -4,10 +4,14 @@ A small WebGL flight demo built with Three.js and vanilla JavaScript. This repos
 
 ## Features
 
-- Simple flight controls (keyboard + optional on-screen joystick)
+- Simple flight controls (keyboard + optional on-screen touch)
 - Obstacles and collisions with explosion effect
 - Uses included `three.*` libraries (multiple versions in `libs/`)
 - Lightweight, zero-build static site (open `index.html` in a browser/server)
+
+## Game play
+- You want to avoid the bombs and aquire stars which gives you live.
+- You have 3 lives and when you explored 3 times it's game over.
 
  ![Screenshot 2026-01-20 at 12 03 22 PM](https://github.com/user-attachments/assets/0b163c13-0a38-4bc0-aa28-62cc658b7641)
 
@@ -40,9 +44,9 @@ You can also use the Live Server / Workspace Server extensions in editors like V
 
 ## Controls
 
-- Keyboard: use `W A S D` or the arrow keys to steer the plane (forward/left/right/down/backwards depending on build).
-- Mouse: move camera/view (if enabled by the current build of the demo).
-- Touch: the included `JoyStick.js` provides on-screen joystick support for mobile/touch.
+- Keyboard: use `Space` key to steer the plane (up/down).
+- Mouse: use `Right click` to steer the plane (up/down).
+- Touch: simple screen tabs or long press to steer the plane (up/down)
 
 Note: exact control mapping may be implemented in `Player.js` / `Game.js`; check those files to customize controls.
 
@@ -78,7 +82,3 @@ This repository currently has no license file. If you want to make it open-sourc
 
 - Report issues or open pull requests with clear descriptions.
 - For UI or UX changes, include screenshots or short screen recordings.
-
-## Contact / Author
-
-Author: (you) — update author/contact information here if you want to publish this repo on GitHub.
