@@ -15,6 +15,8 @@ A small WebGL flight demo built with Three.js and vanilla JavaScript. This repos
 
 <img width="2560" height="1440" alt="Screenshot 2026-01-20 at 12 04 13 PM" src="https://github.com/user-attachments/assets/0ca5d481-3517-411f-a068-74b30f99f063" />
 
+<img width="2560" height="1440" alt="Screenshot 2026-01-20 at 12 04 25 PM" src="https://github.com/user-attachments/assets/fcb6e5ec-a787-4e36-95db-917bba09d3b1" />
+
 ## Quick Start
 
 Serve the project over a local HTTP server (recommended) and open the page in your browser.
