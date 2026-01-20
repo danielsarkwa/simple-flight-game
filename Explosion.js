@@ -4,9 +4,9 @@ import {
   ShaderMaterial,
   Mesh,
   ShaderChunk,
-} from '../../libs/three137/three.module.js';
-import { noise } from '../../libs/Noise.js';
-import { Tween } from '../../libs/Toon3D.js';
+} from '../libs/three137/three.module.js';
+import { noise } from '../libs/Noise.js';
+import { Tween } from '../libs/Toon3D.js';
 
 class Explosion {
   static vshader = `
@@ -69,7 +69,6 @@ void main() {
 
     this.obstacles = obstacles;
 
-    // used to share responsibility with the GPU and CPU
     this.uniforms = {
       u_time: { value: 0.0 },
       u_mouse: { value: { x: 0.0, y: 0.0 } },

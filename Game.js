@@ -20,7 +20,7 @@ class Game {
       70,
       window.innerWidth / window.innerHeight,
       0.01,
-      100
+      100,
     );
     this.camera.position.set(-4.37, 0, -4.75);
     this.camera.lookAt(0, 0, 6);
@@ -134,7 +134,7 @@ class Game {
       undefined,
       (err) => {
         console.error(err.message);
-      }
+      },
     );
   }
 
@@ -149,12 +149,12 @@ class Game {
 
   loadSkybox() {
     this.scene.background = new THREE.CubeTextureLoader()
-      .setPath(`${this.assetsPath}plane/paintedsky/`)
+      .setPath(`${this.assetsPath}/plane/paintedsky/`)
       .load(
         ['px.jpg', 'nx.jpg', 'py.jpg', 'ny.jpg', 'pz.jpg', 'nz.jpg'],
         () => {
           this.renderer.setAnimationLoop(this.render.bind(this));
-        }
+        },
       );
   }
 
@@ -166,6 +166,8 @@ class Game {
 
     gameover.style.display = 'block';
     btn.style.display = 'block';
+
+    this.plane.visible = false;
   }
 
   incScore() {
@@ -183,7 +185,7 @@ class Game {
 
     elm.innerHTML = this.lives;
 
-    if (this.lives == 0) this.gameOver();
+    if (this.lives == 0) setTimeout(this.gameOver.bind(this), 1200);
   }
 
   updateCamera() {
@@ -204,12 +206,13 @@ class Game {
       }
     }
 
+    const dt = this.clock.getDelta();
     const time = this.clock.getElapsedTime();
 
     this.plane.update(time);
 
     if (this.active) {
-      this.obstacles.update(this.plane.position);
+      this.obstacles.update(this.plane.position, dt);
     }
 
     this.updateCamera();

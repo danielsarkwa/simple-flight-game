@@ -78,7 +78,7 @@ class Obstacles {
 
     let rotate = true;
 
-    for (let y = 7.5; y > -8; y -= 2.5) {
+    for (let y = 5; y > -8; y -= 2.5) {
       rotate = !rotate;
       if (y == 0) continue;
       const bomb = this.bomb.clone();
@@ -110,8 +110,7 @@ class Obstacles {
   reset() {
     this.obstacleSpawn = { pos: 20, offset: 5 };
     this.obstacles.forEach((obstacle) => this.respawnObstacle(obstacle));
-
-    let count = 0;
+    let count;
     while (this.explosions.length > 0 && count < 100) {
       this.explosions[0].onComplete();
       count++;
@@ -163,12 +162,12 @@ class Obstacles {
 
   hit(obj) {
     if (obj.name == 'star') {
+      obj.visible = false;
       this.game.incScore();
     } else {
       this.explosions.push(new Explosion(obj, this));
       this.game.decLives();
     }
-    obj.visible = false;
   }
 }
 
