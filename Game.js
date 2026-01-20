@@ -2,7 +2,7 @@ import * as THREE from '../libs/three137/three.module.js';
 import { RGBELoader } from '../libs/three137/RGBELoader.js';
 import { LoadingBar } from '../libs/LoadingBar.js';
 import { Plane } from './Plane.js';
-// import { Obstacles } from './Obstacles.js';
+import { Obstacles } from './Obstacles.js';
 
 class Game {
   constructor() {
@@ -14,7 +14,7 @@ class Game {
 
     this.clock = new THREE.Clock();
 
-    this.assetsPath = '../assets/';
+    this.assetsPath = '../../assets/';
 
     this.camera = new THREE.PerspectiveCamera(
       70,
@@ -72,7 +72,6 @@ class Game {
     btn.style.display = 'none';
 
     this.score = 0;
-    this.bonusScore = 0;
     this.lives = 3;
 
     let elm = document.getElementById('score');
@@ -210,7 +209,7 @@ class Game {
     this.plane.update(time);
 
     if (this.active) {
-      this.obstacles.update(this.plane.position, dt);
+      this.obstacles.update(this.plane.position);
     }
 
     this.updateCamera();

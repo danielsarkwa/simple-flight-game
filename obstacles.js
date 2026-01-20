@@ -1,5 +1,5 @@
-import { Group, Vector3 } from '../../libs/three137/three.module.js';
-import { GLTFLoader } from '../../libs/three137/GLTFLoader.js';
+import { Group, Vector3 } from '../libs/three137/three.module.js';
+import { GLTFLoader } from '../libs/three137/GLTFLoader.js';
 
 class Obstacles {
   constructor(game) {
@@ -70,18 +70,17 @@ class Obstacles {
 
     obstacle.add(this.star);
 
-    this.bomb.rotation.x = -Math.PI * 0.5; // rotate first bomb by 90deg
-    this.bomb.position.y = 7.5; // position first bomb at the top
+    this.bomb.rotation.x = -Math.PI * 0.5;
+    this.bomb.position.y = 7.5;
     obstacle.add(this.bomb);
 
     let rotate = true;
 
     for (let y = 7.5; y > -8; y -= 2.5) {
-      // start at 7.5 position and decreate by an interval of 2.5 when generating the bomb
       rotate = !rotate;
-      if (y == 0) continue; // skip the loop because the star is at point zero
-      const bomb = this.bomb.clone(); // create a new mesh object
-      bomb.rotation.x = rotate ? -Math.PI * 0.5 : 0; // add rotation based on the position for the bomb
+      if (y == 0) continue;
+      const bomb = this.bomb.clone();
+      bomb.rotation.x = rotate ? -Math.PI * 0.5 : 0;
       bomb.position.y = y;
       obstacle.add(bomb);
     }
@@ -118,9 +117,41 @@ class Obstacles {
     });
   }
 
-  update(pos) {}
+  update(pos) {
+    let collisionObstacle;
 
-  hit(obj) {}
+    this.obstacles.forEach((obstacle) => {
+      obstacle.children[0].rotateY(0.01);
+      const relativePosZ = obstacle.position.z - pos.z;
+      if (Math.abs(relativePosZ) < 2 && !obstacle.userData.hit) {
+        collisionObstacle = obstacle;
+      }
+      if (relativePosZ < -20) {
+        this.respawnObstacle(obstacle);
+      }
+    });
+
+    if (collisionObstacle !== undefined) {
+      collisionObstacle.children.some((child) => {
+        child.getWorldPosition(this.tmpPos);
+        const dist = this.tmpPos.distanceToSquared(pos);
+        if (dist < 5) {
+          collisionObstacle.userData.hit = true;
+          this.hit(child);
+          return true;
+        }
+      });
+    }
+  }
+
+  hit(obj) {
+    if (obj.name == 'star') {
+      this.game.incScore();
+    } else {
+      this.game.decLives();
+    }
+    obj.visible = false;
+  }
 }
 
 export { Obstacles };
