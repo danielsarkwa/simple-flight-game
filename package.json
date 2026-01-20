@@ -2,7 +2,7 @@
   "name": "simple-flight-game",
   "version": "1.0.0",
   "description": "A small WebGL flight demo built with Three.js and vanilla JavaScript. This repository contains a lightweight, self-contained game demo showing a controllable plane, obstacles, explosion effects, and simple physics/interaction helpers.",
-  "main": "Explosion.js",
+  "main": "Game.js",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
     "start": "node server.js"
